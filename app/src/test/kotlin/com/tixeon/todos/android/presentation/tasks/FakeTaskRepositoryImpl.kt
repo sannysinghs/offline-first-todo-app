@@ -1,7 +1,7 @@
 package com.tixeon.todos.android.presentation.tasks
 
 import com.tixeon.todos.android.data.local.entity.TaskEntity
-import com.tixeon.todos.android.domain.repository.TaskRepository
+import com.tixeon.todos.android.data.respository.TaskRepository
 import com.tixeon.todos.android.presentation.tasks.TaskViewModelTest.Companion.FAKE_TASK_ENTITY
 import com.tixeon.todos.android.util.Resource
 import kotlinx.coroutines.flow.Flow

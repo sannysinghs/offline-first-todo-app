@@ -26,7 +26,7 @@ fun MainScreen(
     val (selectedTabIndex, setSelectedTabIndex) = remember { mutableIntStateOf(0) } // State for selected tab
 
     Column {
-        TopBar(title = "Proton Test")
+        TopBar(title = "Super todo")
         when (val viewState = state.value) {
             is TaskViewState.Loading -> {
                 GenericLoadingScreen()

@@ -86,38 +86,33 @@ class TaskViewModel @Inject constructor(
         }
 
     private suspend fun mapToViewState(res: List<TaskEntity>) = coroutineScope {
-        val map = res.map {
-            async { toViewTask(it) }
+        val map = res.map { task ->
+            val dependencies = if (task.dependencies.isNotEmpty()) {
+                task.dependencies.split(",").map { it.toLong() }
+            } else {
+                emptyList()
+            }
+
+            val hasDependenciesResolved = true
+
+            Task(
+                title = task.title,
+                description = task.description,
+                dueDate = task.dueDate?.toDateString(),
+                createdDate = task.creationDate.toDateString(),
+                id = task.id,
+                image = task.image,
+                isCompletable = hasDependenciesResolved,
+                isCompleted = task.isCompleted,
+                dependencies = dependencies
+            )
         }
 
-        return@coroutineScope with(map.awaitAll()) {
+        return@coroutineScope with(map) {
             TaskResult(
                 allTasks = sortedBy { it.createdDate },
                 upcomingTasks = filterNot { it.isCompleted }.sortedBy { it.dependencies.size }
             )
         }
     }
-
-    private fun toViewTask(task: TaskEntity): Task {
-        val dependencies = if (task.dependencies.isNotEmpty()) {
-            task.dependencies.split(",").map { it.toLong() }
-        } else {
-            emptyList()
-        }
-
-        val hasDependenciesResolved = false
-
-        return Task(
-            title = task.title,
-            description = task.description,
-            dueDate = task.dueDate?.toDateString(),
-            createdDate = task.creationDate.toDateString(),
-            id = task.id,
-            image = task.image,
-            isCompletable = hasDependenciesResolved,
-            isCompleted = task.isCompleted,
-            dependencies = dependencies
-        )
-    }
-
 }

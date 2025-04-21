@@ -57,6 +57,9 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.runtime:runtime-livedata:1.7.4")
 
+    // datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.4")
+
     // Room
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-runtime:2.6.1")

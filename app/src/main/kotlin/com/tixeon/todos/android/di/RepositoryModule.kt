@@ -1,7 +1,7 @@
 package com.tixeon.todos.android.di
 
 import com.tixeon.todos.android.data.respository.TaskRepositoryImpl
-import com.tixeon.todos.android.domain.repository.TaskRepository
+import com.tixeon.todos.android.data.respository.TaskRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
