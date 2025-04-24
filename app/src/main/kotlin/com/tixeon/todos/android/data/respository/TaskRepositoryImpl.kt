@@ -1,6 +1,6 @@
 package com.tixeon.todos.android.data.respository
 
-import com.tixeon.todos.android.data.AppPreferenceDataStore
+import com.tixeon.todos.android.data.datastore.AppPreferenceDataStore
 import com.tixeon.todos.android.data.local.dao.TaskDao
 import com.tixeon.todos.android.data.local.entity.TaskEntity
 import com.tixeon.todos.android.data.remote.api.TaskApi

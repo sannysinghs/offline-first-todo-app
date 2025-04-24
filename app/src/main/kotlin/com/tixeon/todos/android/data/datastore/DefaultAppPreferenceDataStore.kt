@@ -1,4 +1,4 @@
-package com.tixeon.todos.android.data
+package com.tixeon.todos.android.data.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -8,15 +8,6 @@ import com.tixeon.todos.android.data.sync.ChangeListVersion
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-
-data class AppPreference(
-    val changeListVersion: Int
-)
-
-interface AppPreferenceDataStore {
-    suspend fun getChangeListVersion(): Int
-    suspend fun setChangeListVersion(version: Int)
-}
 
 class DefaultAppPreferenceDataStore @Inject constructor(
     private val datastore: DataStore<Preferences>
