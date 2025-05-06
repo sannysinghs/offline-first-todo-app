@@ -6,27 +6,22 @@ import com.tixeon.todos.android.data.local.entity.TaskEntity
 import com.tixeon.todos.android.domain.model.Task
 import com.tixeon.todos.android.domain.usecases.CompleteTaskUseCase
 import com.tixeon.todos.android.domain.usecases.GetAllTasksUseCase
-import com.tixeon.todos.android.domain.usecases.GetCompletedTasks
 import com.tixeon.todos.android.util.DispatcherProvider
 import com.tixeon.todos.android.util.Resource
 import com.tixeon.todos.android.util.toDateString
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class TaskViewModel @Inject constructor(
     private val getAllTasks: GetAllTasksUseCase,
     private val completeTaskUseCase: CompleteTaskUseCase,
-    private val getCompletedTasks: GetCompletedTasks,
     private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
 
@@ -50,21 +45,18 @@ class TaskViewModel @Inject constructor(
     }
 
     fun toggleCompleteTask(task: Task) = viewModelScope.launch {
-        _actionStateFlow.value = ToggleTaskCompleteViewState.Loading
-        withContext(dispatcherProvider.io()) {
-            completeTaskUseCase(task.copy(isCompleted = !task.isCompleted))
-                .collectLatest { res ->
-                    when (res) {
-                        is Resource.Success -> {
-                            _actionStateFlow.value = ToggleTaskCompleteViewState.Success
-                            _viewStateFlow.value = TaskViewState.Success(mapToViewState(res.data))
-                        }
+        completeTaskUseCase(task.copy(isCompleted = !task.isCompleted))
+            .flowOn(dispatcherProvider.io())
+            .collectLatest { res ->
+                when (res) {
+                    is Resource.Error ->
+                        _actionStateFlow.value = ToggleTaskCompleteViewState.Error(res.message)
 
-                        is Resource.Error ->
-                            _actionStateFlow.value = ToggleTaskCompleteViewState.Error(res.message)
+                    else -> {
+                        // do nothing
                     }
                 }
-        }
+            }
     }
 
     private suspend fun fetchRequests() = getAllTasks()

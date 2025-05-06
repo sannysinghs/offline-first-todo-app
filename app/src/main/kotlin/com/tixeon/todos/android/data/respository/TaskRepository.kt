@@ -10,4 +10,10 @@ interface TaskRepository {
     fun getCompletedTasks(): List<String>
     suspend fun syncTasks(): Boolean
     fun updateTaskToComplete(id: String, completed: Boolean): Flow<Resource<List<TaskEntity>>>
+    suspend fun updateTask(
+        id: String,
+        title: String,
+        description: String,
+        isCompleted: Boolean
+    ): Flow<Resource<TaskEntity>>
 }

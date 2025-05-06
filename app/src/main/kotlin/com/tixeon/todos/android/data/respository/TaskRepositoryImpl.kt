@@ -1,14 +1,20 @@
 package com.tixeon.todos.android.data.respository
 
+import android.util.Log
 import com.tixeon.todos.android.data.datastore.AppPreferenceDataStore
 import com.tixeon.todos.android.data.local.dao.TaskDao
 import com.tixeon.todos.android.data.local.entity.TaskEntity
 import com.tixeon.todos.android.data.remote.api.TaskApi
 import com.tixeon.todos.android.data.remote.response.TaskDto
+import com.tixeon.todos.android.util.DispatcherProvider
 import com.tixeon.todos.android.util.Resource
 import com.tixeon.todos.android.util.toTimeInMills
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,7 +22,8 @@ import javax.inject.Singleton
 class TaskRepositoryImpl @Inject constructor(
     private val taskApi: TaskApi,
     private val dao: TaskDao,
-    private val appPreferences: AppPreferenceDataStore
+    private val appPreferences: AppPreferenceDataStore,
+    private val dispatchers: DispatcherProvider
 ) : TaskRepository {
 
     private val taskToCompletedMap: MutableMap<String, Boolean> = hashMapOf()
@@ -67,6 +74,26 @@ class TaskRepositoryImpl @Inject constructor(
             emit(Resource.Error(e.message.orEmpty()))
         }
     }
+
+    override suspend fun updateTask(
+        id: String,
+        title: String,
+        description: String,
+        isCompleted: Boolean
+    ): Flow<Resource<TaskEntity>> = try {
+        withContext(dispatchers.io()) {
+            val old = dao.getTask(id) ?: throw TaskNotFoundException("Task (id $id) not found")
+            val new = old.copy(isCompleted = isCompleted)
+            dao.updateTasks(listOf(new))
+
+            flowOf(Resource.Success(new))
+        }
+    } catch (e: Exception) {
+        Log.e(TAG, "updateTask: Error update task: ${e.message.orEmpty()}")
+        flowOf(Resource.Error(e.message.orEmpty()))
+    }
+
+    data class TaskNotFoundException(val taskId: String) : Exception()
 
     companion object {
         const val TAG = "TaskRepository"

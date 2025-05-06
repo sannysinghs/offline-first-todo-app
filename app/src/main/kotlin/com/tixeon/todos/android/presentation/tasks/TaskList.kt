@@ -4,12 +4,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Notifications
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.tixeon.todos.android.AppTheme
 import com.tixeon.todos.android.domain.model.Task
 
@@ -77,23 +80,17 @@ fun TaskListItem(
                     .weight(1f)
                     .padding(16.dp)
         ) {
-            Text(text = title)
+            Text(
+                style = MaterialTheme.typography.titleMedium,
+                fontSize = 15.sp,
+                text = title,
+            )
             if (description.isNotEmpty()) {
-                Text(text = description)
-            }
-
-            Row {
-                Column(modifier = Modifier.padding(top = 8.dp)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            painter = rememberVectorPainter(image = Icons.Sharp.Notifications),
-                            contentDescription = null
-                        )
-                        Text(text = "Due:", modifier = Modifier.padding(start = 8.dp))
-                    }
-                }
+                Text(
+                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 13.sp,
+                    text = description,
+                )
             }
         }
 

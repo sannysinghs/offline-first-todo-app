@@ -149,7 +149,6 @@ class TaskViewModelTest {
         viewModel = TaskViewModel(
             getAllTasks = getAllTasksUseCase,
             completeTaskUseCase = completeTaskUseCase,
-            getCompletedTasks = getCompletedTasksUseCase,
             dispatcherProvider = object : DispatcherProvider {
                 override fun io() = testDispatcher
                 override fun main() = testDispatcher
