@@ -10,6 +10,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import com.tixeon.todos.android.data.respository.TaskRepository
+import com.tixeon.todos.android.data.sync.Syncable
 import com.tixeon.todos.android.util.DispatcherProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -28,7 +29,9 @@ internal class SyncWorker @AssistedInject constructor(
     override suspend fun doWork(): Result = withContext(dispatcherProvider.io()) {
         try {
             val syncedSuccessfully = awaitAll(
-                async { taskRepository.syncTasks() }
+                async {
+                    if (taskRepository is Syncable) taskRepository.syncs() else true
+                }
             ).any { it }
 
             if (syncedSuccessfully) {

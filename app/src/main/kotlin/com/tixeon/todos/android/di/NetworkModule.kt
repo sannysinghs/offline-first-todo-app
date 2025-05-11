@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -15,12 +16,20 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "https://todo-api-k3hgwkqpea-as.a.run.app/"
+
+    private const val BASE_URL = "http://10.0.2.2:3000/"
+//    private const val BASE_URL = "https://todo-api-370038902333.asia-southeast1.run.app/"
+
+    private val httpLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient =
-        OkHttpClient.Builder().build()
+    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(httpLoggingInterceptor)
+        .build()
 
     @Singleton
     @Provides

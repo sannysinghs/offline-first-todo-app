@@ -7,12 +7,13 @@ import com.tixeon.todos.android.util.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-open class CompleteTaskUseCase @Inject constructor(private val repository: TaskRepository) {
-    operator fun invoke(task: Task): Flow<Resource<TaskEntity>> =
-        repository.updateTask(
-            id = task.id,
-            title = task.title,
-            description = task.description,
-            isCompleted = task.isCompleted
+open class AddTaskUseCase @Inject constructor(private val repository: TaskRepository) {
+    operator fun invoke(
+        title: String,
+        description: String,
+    ): Flow<Resource<TaskEntity>> =
+        repository.addTask(
+            title = title,
+            description = description,
         )
 }

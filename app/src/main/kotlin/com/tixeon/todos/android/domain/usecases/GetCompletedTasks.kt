@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 open class GetCompletedTasks @Inject constructor(private val repository: TaskRepository) {
     operator fun invoke(): List<String> {
-        return repository.getCompletedTasks()
+        return emptyList()
     }
 }

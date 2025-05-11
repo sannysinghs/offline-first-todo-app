@@ -37,3 +37,8 @@ fun Long.toDateString(): String {
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return dateFormat.format(calendar.time)
 }
+
+fun timeInMillis(): Long {
+    val calendar = Calendar.getInstance()
+    return calendar.timeInMillis
+}

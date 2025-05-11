@@ -7,13 +7,15 @@ import kotlinx.coroutines.flow.Flow
 interface TaskRepository {
 
     fun getTaskList(): Flow<List<TaskEntity>>
-    fun getCompletedTasks(): List<String>
-    suspend fun syncTasks(): Boolean
-    fun updateTaskToComplete(id: String, completed: Boolean): Flow<Resource<List<TaskEntity>>>
-    suspend fun updateTask(
+    fun updateTask(
         id: String,
         title: String,
         description: String,
         isCompleted: Boolean
+    ): Flow<Resource<TaskEntity>>
+
+    fun addTask(
+        title: String,
+        description: String,
     ): Flow<Resource<TaskEntity>>
 }

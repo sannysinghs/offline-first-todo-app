@@ -3,11 +3,14 @@ package com.tixeon.todos.android.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.tixeon.todos.android.data.remote.response.TaskDto
 
 @Entity(tableName = "task")
 data class TaskEntity(
-    @PrimaryKey
-    val id: String,
+    @PrimaryKey()
+    val localId: String,
+    @ColumnInfo(name = "remote_id")
+    val remoteId: String,
     @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "description")
@@ -21,7 +24,7 @@ data class TaskEntity(
     @ColumnInfo("dependencies")
     val dependencies: String,
     @ColumnInfo("is_completed")
-    val isCompleted: Boolean,
+    val isCompleted: Boolean = false,
     @ColumnInfo("is_synced")
-    val isSynced: Boolean = false
+    val isSynced: Boolean = false,
 )

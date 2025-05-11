@@ -13,15 +13,18 @@ interface TaskDao {
     @Query("SELECT * FROM task ORDER BY creation_date DESC")
     fun getAllTask(): Flow<List<TaskEntity>>
 
-    @Query("SELECT * FROM task WHERE id = :id")
-    suspend fun getTask(id: String): TaskEntity?
+    @Query("SELECT * FROM task WHERE is_synced = 0")
+    fun getUnSyncedTask(): List<TaskEntity>
+
+    @Query("SELECT * FROM task WHERE localId = :localId")
+    suspend fun getTask(localId: String): TaskEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllTasks(vararg tasks: TaskEntity)
 
     @Upsert
-    suspend fun updateTasks(tasks: List<TaskEntity>)
+    suspend fun updateTasks(vararg tasks: TaskEntity)
 
-    @Query("DELETE FROM task WHERE id IN (:ids)")
-    suspend fun deleteTasks(ids: List<String>)
+    @Query("DELETE FROM task WHERE localId IN (:localIds)")
+    suspend fun deleteTasks(localIds: List<String>)
 }
