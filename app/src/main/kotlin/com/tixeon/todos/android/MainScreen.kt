@@ -37,8 +37,6 @@ fun MainScreen(
     taskViewState: TaskViewState,
     onClickAddTask: (String, String) -> Unit,
 ) {
-    val action = viewModel.toggleTaskCompleteViewStateStateFlow.collectAsStateWithLifecycle()
-
     val (selectedTabIndex, setSelectedTabIndex) = remember { mutableIntStateOf(0) } // State for selected tab
 
     Box (modifier = Modifier.fillMaxSize()) {
@@ -59,10 +57,6 @@ fun MainScreen(
                         onTabSelected = { setSelectedTabIndex(it) }
                     )
                     Box {
-                        if (action.value is ToggleTaskCompleteViewState.Loading) {
-                            ActionLoadingScreen()
-                        }
-
                         // Display all tasks
                         TaskList(
                             tasks = if (selectedTabIndex == 0) {
@@ -70,7 +64,7 @@ fun MainScreen(
                             } else {
                                 viewState.result.upcomingTasks
                             },
-                            disableTaskToggle = action.value is ToggleTaskCompleteViewState.Loading,
+                            disableTaskToggle = false,
                             onToggleTaskCompleted = {
                                 viewModel.toggleCompleteTask(task = it)
                             }

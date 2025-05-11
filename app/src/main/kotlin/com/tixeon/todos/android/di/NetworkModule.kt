@@ -17,8 +17,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "http://10.0.2.2:3000/"
-//    private const val BASE_URL = "https://todo-api-370038902333.asia-southeast1.run.app/"
+//    private const val BASE_URL = "http://10.0.2.2:3000/"
+    private const val BASE_URL = "https://todo-api-370038902333.asia-southeast1.run.app/"
 
     private val httpLoggingInterceptor =
         HttpLoggingInterceptor().apply {

@@ -7,25 +7,8 @@ import kotlinx.coroutines.coroutineScope
 
 internal suspend fun mapToViewState(res: List<TaskEntity>) = coroutineScope {
         val map = res.map { task ->
-            val dependencies = if (task.dependencies.isNotEmpty()) {
-                task.dependencies.split(",").map { it.toLong() }
-            } else {
-                emptyList()
-            }
-
             val hasDependenciesResolved = true
-
-            Task(
-                title = task.title,
-                description = task.description,
-                dueDate = task.dueDate?.toDateString(),
-                createdDate = task.creationDate.toDateString(),
-                id = task.localId,
-                image = task.image,
-                isCompletable = hasDependenciesResolved,
-                isCompleted = task.isCompleted,
-                dependencies = dependencies
-            )
+            task.toTask(hasDependenciesResolved)
         }
 
         return@coroutineScope with(map) {
@@ -35,3 +18,23 @@ internal suspend fun mapToViewState(res: List<TaskEntity>) = coroutineScope {
             )
         }
     }
+
+fun TaskEntity.toTask(hasDependenciesResolved: Boolean): Task {
+    val dependencies = if (dependencies.isNotEmpty()) {
+        dependencies.split(",").map { it.toLong() }
+    } else {
+        emptyList()
+    }
+
+    return Task(
+        title = title,
+        description = description,
+        dueDate = dueDate?.toDateString(),
+        createdDate = creationDate.toDateString(),
+        id = localId,
+        image = image,
+        isCompletable = hasDependenciesResolved,
+        isCompleted = isCompleted,
+        dependencies = dependencies
+    )
+}

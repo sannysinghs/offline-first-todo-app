@@ -47,7 +47,7 @@ fun TaskList(
                     createdDate = task.createdDate,
                     dueDate = task.dueDate.orEmpty(),
                     done = isCompleted,
-                    isCheckBoxEnabled = task.isCompletable && !disableTaskToggle,
+                    isCheckBoxEnabled = task.isCompletable,
                     onCheckedChange = { _ ->
                         if (!disableTaskToggle) {
                             setIsCompleted(!isCompleted)

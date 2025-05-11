@@ -2,9 +2,9 @@ package com.tixeon.todos.android.presentation.tasks
 
 import com.tixeon.todos.android.data.local.entity.TaskEntity
 import com.tixeon.todos.android.data.respository.TaskRepository
-import com.tixeon.todos.android.presentation.tasks.TaskViewModelTest.Companion.FAKE_TASK_ENTITY
 import com.tixeon.todos.android.util.Resource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeTaskRepositoryImpl: TaskRepository {
@@ -16,39 +16,49 @@ class FakeTaskRepositoryImpl: TaskRepository {
         exception = null
     }
 
-    fun fakeRetrievalError(
-        err: Exception = Exception("error")
-    ) {
+    fun fakeError(err: Exception = Exception("error")) {
         exception = err
         tasks = emptyList()
     }
 
-    override suspend fun getTaskList(): Flow<Resource<List<TaskEntity>>> {
-        return flowOf(
-            if (exception != null) {
-                Resource.Error(exception?.message.orEmpty())
-            } else {
-                Resource.Success(tasks)
-            }
+    override fun updateTask(
+        id: String,
+        title: String,
+        description: String,
+        isCompleted: Boolean
+    ): Flow<Resource<TaskEntity>> = flowOf(
+        if (exception != null) {
+            Resource.Error(exception?.message.orEmpty())
+        } else {
+            Resource.Success(tasks.first())
+        }
+    )
 
-        )
-    }
+    override fun addTask(
+        title: String,
+        description: String
+    ): Flow<Resource<TaskEntity>> = flowOf(
+        if (exception != null) {
+            Resource.Error(exception?.message.orEmpty())
+        } else {
+            Resource.Success(
+                TaskEntity(
+                    localId = "local_123",
+                    remoteId = "1000",
+                    title = title,
+                    description = description,
+                    isCompleted = false,
+                    creationDate = 1000L,
+                    dependencies = "",
+                )
+            )
+        }
+    )
 
-    override fun getCompletedTasks(): List<Long> {
-        if(exception != null) throw exception!!
-        return listOf(FAKE_TASK_ENTITY.id)
-    }
-
-    override suspend fun updateTaskToComplete(
-        id: Long,
-        completed: Boolean
-    ): Flow<Resource<TaskEntity>> {
-        return flowOf(
-            if (exception != null) {
-                Resource.Error(exception?.message.orEmpty())
-            } else {
-                Resource.Success(tasks.first())
-            }
-        )
+    override fun getTaskList(): Flow<List<TaskEntity>> = flow {
+        if (exception != null) {
+            throw exception!!
+        }
+        emit(tasks)
     }
 }
