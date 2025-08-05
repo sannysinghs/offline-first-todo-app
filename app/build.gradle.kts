@@ -19,6 +19,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.10"
@@ -34,8 +35,12 @@ android {
     }
 
     buildTypes {
-        debug {  }
-        release {  }
+        debug {
+            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:3000/\"")
+        }
+        release {
+            buildConfigField("String", "BASE_URL", "\"https://todo-api-370038902333.asia-southeast1.run.app/\"")
+        }
     }
 }
 
