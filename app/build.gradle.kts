@@ -54,13 +54,15 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.navigation:navigation-fragment-ktx:2.8.3")
 
+    // navigation compose
+    implementation("androidx.navigation:navigation-compose:2.9.7")
+
     val composeBom = platform("androidx.compose:compose-bom:2024.10.00")
     implementation(composeBom)
 
     implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.foundation:foundation-layout")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.4")
 
     // work manager
     implementation("androidx.work:work-runtime-ktx:2.10.0")
@@ -81,8 +83,6 @@ dependencies {
     // hilt
     kapt("com.google.dagger:hilt-compiler:2.54")
     implementation("com.google.dagger:hilt-android:2.54")
-
-    // worker
     kapt("androidx.hilt:hilt-compiler:1.2.0")
     implementation("androidx.hilt:hilt-work:1.2.0")
 
